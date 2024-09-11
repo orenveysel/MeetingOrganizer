@@ -2,7 +2,31 @@
     ViewData["Title"] = "Meeting Organizer";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h2>Meeting Organizer</h2>
+
+<div>
+    <h3>Yeni Toplantı Ekle</h3>
+    <form id="meetingForm">
+        <label for="topic">Toplantı Konusu:</label>
+        <input type="text" id="topic" name="topic" required><br>
+
+        <label for="date">Tarih:</label>
+        <input type="date" id="date" name="date" required><br>
+
+        <label for="startTime">Başlangıç Saati:</label>
+        <input type="time" id="startTime" name="startTime" required><br>
+
+        <label for="endTime">Bitiş Saati:</label>
+        <input type="time" id="endTime" name="endTime" required><br>
+
+        <label for="participants">Katılımcılar:</label>
+        <input type="text" id="participants" name="participants"><br>
+
+        <button type="submit">Toplantı Ekle</button>
+    </form>
+</div>
+
+<div>
+    <h3>Toplantılar</h3>
+    <ul id="meetingList"></ul>
 </div>
