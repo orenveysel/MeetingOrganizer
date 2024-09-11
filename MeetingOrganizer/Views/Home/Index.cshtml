@@ -8,19 +8,19 @@
     <h3>Yeni Toplantı Ekle</h3>
     <form id="meetingForm">
         <label for="topic">Toplantı Konusu:</label>
-        <input type="text" id="topic" name="topic" required><br>
+        <input type="text" id="topic" name="Topic" required><br>
 
         <label for="date">Tarih:</label>
-        <input type="date" id="date" name="date" required><br>
+        <input type="date" id="date" name="Date" required><br>
 
         <label for="startTime">Başlangıç Saati:</label>
-        <input type="time" id="startTime" name="startTime" required><br>
+        <input type="time" id="startTime" name="StartTime" required><br>
 
         <label for="endTime">Bitiş Saati:</label>
-        <input type="time" id="endTime" name="endTime" required><br>
+        <input type="time" id="endTime" name="EndTime" required><br>
 
         <label for="participants">Katılımcılar:</label>
-        <input type="text" id="participants" name="participants"><br>
+        <input type="text" id="participants" name="Participants"><br>
 
         <button type="submit">Toplantı Ekle</button>
     </form>
@@ -30,3 +30,167 @@
     <h3>Toplantılar</h3>
     <ul id="meetingList"></ul>
 </div>
+
+<div id="updatePopup" style="display: none;">
+    <div id="popupContent">
+        <h2>Toplantı Güncelle</h2>
+        <form id="updateForm">
+            <input type="hidden" id="updateId" />
+            <label for="updateTopic">Konu:</label>
+            <input type="text" id="updateTopic" required />
+            <br />
+            <label for="updateDate">Tarih:</label>
+            <input type="date" id="updateDate" required />
+            <br />
+            <label for="updateStartTime">Başlangıç Saati:</label>
+            <input type="time" id="updateStartTime" required />
+            <br />
+            <label for="updateEndTime">Bitiş Saati:</label>
+            <input type="time" id="updateEndTime" required />
+            <br />
+            <label for="updateParticipants">Katılımcılar:</label>
+            <input type="text" id="updateParticipants" required />
+            <br />
+            <button type="submit">Güncelle</button>
+            <button type="button" onclick="closePopup()">Kapat</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Form submit edildiğinde AJAX ile veriyi gönderiyoruz
+        $("#meetingForm").submit(function (event) {
+            event.preventDefault();  // Formun varsayılan submit olayını durduruyoruz
+
+            var meeting = {
+                "Topic": $("#topic").val(),
+                "Date": $("#date").val(),
+                "StartTime": $("#startTime").val(),
+                "EndTime": $("#endTime").val(),
+                "Participants": $("#participants").val()
+            };
+
+            let deneme = JSON.stringify(meeting);  // JSON formatında veriyi serileştiriyoruz
+
+            $.ajax({
+                type: "POST",
+                url: "/Meeting/Create",
+                data: meeting,  // Correctly passing the serialized object
+                dataType: "json",
+                // contentType: "application/json",
+                success: function (response) {
+                    loadMeetings();
+                    $("#meetingForm")[0].reset();
+                },
+                error: function (error) {
+                    console.log("Veri gönderiminde hata oluştu:", error);
+                }
+            });
+
+        });
+
+        // Veritabanındaki tüm toplantıları listeleme
+        
+
+        
+        // Sayfa yüklendiğinde toplantıları listele
+        loadMeetings();
+    });
+
+    function loadMeetings() {
+        $.ajax({
+            type: "GET",
+            url: "/Meeting/GetAll",  // Toplantı listesini alacağımız endpoint
+            success: function (data) {
+                var meetingList = $("#meetingList");
+                meetingList.empty();  // Listeyi temizliyoruz
+                $.each(data, function (i, meeting) {
+                    // Her toplantı için liste öğesi oluşturuluyor ve sonuna "Sil" butonu ekleniyor
+                    var listItem = `
+                            <li>
+                                ${meeting.topic} (${meeting.date})
+                                <button onclick="deleteMeeting(${meeting.id})">Sil</button>
+                                <button onclick="openUpdatePopup(${meeting.id})">Güncelle</button>
+                            </li>
+                        `;
+                    meetingList.append(listItem);
+                });
+            },
+            error: function (error) {
+                console.log("Liste alınırken hata oluştu:", error);
+            }
+        });
+    }
+
+    function deleteMeeting(meetingId) {
+        if (confirm("Bu toplantıyı silmek istediğinizden emin misiniz?")) {
+            $.ajax({
+                type: "DELETE",
+                url: "/Meeting/Delete/" + meetingId,  // Toplantıyı silmek için endpoint
+                success: function () {
+                    loadMeetings();  // Silme işlemi başarılıysa listeyi güncelle
+                },
+                error: function (error) {
+                    console.log("Toplantı silinirken hata oluştu:", error);
+                }
+            });
+        }
+    }
+
+    function openUpdatePopup(meetingId) {
+        // AJAX ile toplantı bilgilerini al
+        $.ajax({
+            type: "GET",
+            url: "/Meeting/GetById/" + meetingId,  // Toplantı detayını alacağımız endpoint
+            success: function (meeting) {
+                // Formu toplantı bilgileri ile doldur
+                $("#updateId").val(meeting.id);
+                $("#updateTopic").val(meeting.topic);
+                $("#updateDate").val(new Date(meeting.date).toISOString().split('T')[0]);
+                $("#updateStartTime").val(meeting.startTime);
+                $("#updateEndTime").val(meeting.endTime);
+                $("#updateParticipants").val(meeting.participants);
+
+                // Popup'ı aç
+                $("#updatePopup").show();
+            },
+            error: function (error) {
+                console.log("Toplantı detayları alınırken hata oluştu:", error);
+            }
+        });
+    }
+
+    function closePopup() {
+        $("#updatePopup").hide();
+    }
+
+    $("#updateForm").submit(function (event) {
+        event.preventDefault();
+
+        var updatedMeeting = {
+            Id: $("#updateId").val(),
+            Topic: $("#updateTopic").val(),
+            Date: $("#updateDate").val(),
+            StartTime: $("#updateStartTime").val(),
+            EndTime: $("#updateEndTime").val(),
+            Participants: $("#updateParticipants").val()
+        };
+
+        $.ajax({
+            type: "PUT",
+            url: "/Meeting/Update",  // Güncelleme endpoint'i
+            data: updatedMeeting,  // Correctly passing the serialized object
+            dataType: "json",
+            success: function () {
+                loadMeetings();  // Güncelleme başarılıysa listeyi güncelle
+                closePopup();    // Popup'ı kapat
+            },
+            error: function (error) {
+                console.log("Toplantı güncellenirken hata oluştu:", error);
+            }
+        });
+    });
+
+</script>

@@ -1,3 +1,6 @@
+using MeetingOrganizer.DAL.DbContexts;
+using System.Configuration;
+
 namespace MeetingOrganizer
 {
     public class Program
@@ -10,7 +13,7 @@ namespace MeetingOrganizer
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddDbContext<AppDbContext>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

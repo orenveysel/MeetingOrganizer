@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MeetingOrganizer.MVC.Controllers
 {
+    [Route("Meeting")]
     public class MeetingController : Controller
     {
         private readonly AppDbContext _context;
@@ -20,7 +21,8 @@ namespace MeetingOrganizer.MVC.Controllers
 
         // Toplantı ekleme
         [HttpPost]
-        public JsonResult Create([FromBody] Meeting meeting)
+        [Route("Create")]
+        public IActionResult Create(Meeting meeting)
         {
             if (ModelState.IsValid)
             {
@@ -33,15 +35,29 @@ namespace MeetingOrganizer.MVC.Controllers
 
         // Tüm toplantıları listeleme
         [HttpGet]
-        public JsonResult GetAll()
+        [Route("GetAll")]
+        public IActionResult GetAll()
         {
             var meetings = _context.Meetings.ToList(); // Veritabanından tüm toplantıları çekiyoruz
             return Json(meetings); // JSON olarak geri döndürüyoruz
         }
 
+        [HttpGet]
+        [Route("GetById/{id}")]
+        public IActionResult GetById(int id)
+        {
+            var meeting = _context.Meetings.Find(id); // Veritabanından tüm toplantıları çekiyoruz
+            if (meeting == null)
+            {
+                return NotFound();
+            }
+            return Ok(meeting);
+        }
+
         // Toplantı güncelleme
-        [HttpPost]
-        public JsonResult Update([FromBody] Meeting meeting)
+        [HttpPut]
+        [Route("Update")]
+        public IActionResult Update(Meeting meeting)
         {
             var existingMeeting = _context.Meetings.Find(meeting.Id); // Veritabanından toplantıyı buluyoruz
             if (existingMeeting != null && ModelState.IsValid)
@@ -61,8 +77,9 @@ namespace MeetingOrganizer.MVC.Controllers
         }
 
         // Toplantı silme
-        [HttpPost]
-        public JsonResult Delete(int id)
+        [HttpDelete]
+        [Route("Delete/{id}")]
+        public IActionResult Delete(int id)
         {
             var meeting = _context.Meetings.Find(id); // Veritabanından toplantıyı buluyoruz
             if (meeting != null)

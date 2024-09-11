@@ -2,7 +2,7 @@
 
 namespace MeetingOrganizer.MVC.Models
 {
-    public class Meeting
+    public class MeetingViewModel
     {
         public int Id { get; set; }
 

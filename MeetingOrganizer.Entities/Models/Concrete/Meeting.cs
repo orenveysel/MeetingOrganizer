@@ -10,14 +10,14 @@ namespace MeetingOrganizer.Entities.Models.Concrete
 {
     public class Meeting : BaseEntity
     {
-        public required string Topic { get; set; }
+        public string Topic { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
-        public TimeSpan StartTime { get; set; }
+        public TimeSpan? StartTime { get; set; }
 
-        public TimeSpan EndTime { get; set; }
+        public TimeSpan? EndTime { get; set; }
 
-        public string? Participants { get; set; }
+        public string Participants { get; set; }
     }
 }
