@@ -2,67 +2,96 @@
     ViewData["Title"] = "Meeting Organizer";
 }
 
-<h2>Meeting Organizer</h2>
+<h2 class="text-center my-5">Meeting Organizer</h2>
 
-<div>
-    <h3>Yeni Toplantı Ekle</h3>
-    <form id="meetingForm">
-        <label for="topic">Toplantı Konusu:</label>
-        <input type="text" id="topic" name="Topic" required><br>
+<div class="container">
+    <div class="row">
+        <!-- Sol Sütun: Yeni Toplantı Ekle -->
+        <div class="col-md-6 border-end">
+            <h3 class="mb-4">Yeni Toplantı Ekle</h3>
+            <form id="meetingForm">
+                <div class="mb-3">
+                    <label for="topic" class="form-label">Toplantı Konusu:</label>
+                    <input type="text" id="topic" name="Topic" class="form-control" required>
+                </div>
 
-        <label for="date">Tarih:</label>
-        <input type="date" id="date" name="Date" required><br>
+                <div class="mb-3">
+                    <label for="date" class="form-label">Tarih:</label>
+                    <input type="date" id="date" name="Date" class="form-control" required>
+                </div>
 
-        <label for="startTime">Başlangıç Saati:</label>
-        <input type="time" id="startTime" name="StartTime" required><br>
+                <div class="mb-3">
+                    <label for="startTime" class="form-label">Başlangıç Saati:</label>
+                    <input type="time" id="startTime" name="StartTime" class="form-control" required>
+                </div>
 
-        <label for="endTime">Bitiş Saati:</label>
-        <input type="time" id="endTime" name="EndTime" required><br>
+                <div class="mb-3">
+                    <label for="endTime" class="form-label">Bitiş Saati:</label>
+                    <input type="time" id="endTime" name="EndTime" class="form-control" required>
+                </div>
 
-        <label for="participants">Katılımcılar:</label>
-        <input type="text" id="participants" name="Participants"><br>
+                <div class="mb-3">
+                    <label for="participants" class="form-label">Katılımcılar:</label>
+                    <input type="text" id="participants" name="Participants" class="form-control">
+                </div>
 
-        <button type="submit">Toplantı Ekle</button>
-    </form>
-</div>
+                <button type="submit" class="btn btn-primary">Toplantı Ekle</button>
+            </form>
+        </div>
 
-<div>
-    <h3>Toplantılar</h3>
-    <ul id="meetingList"></ul>
-</div>
+        <!-- Sağ Sütun: Toplantılar Listesi ve Güncelleme Formu -->
+        <div class="col-md-6">
+            <h3 class="mb-4">Toplantılar</h3>
+            <ul id="meetingList" class="list-group"></ul>
 
-<div id="updatePopup" style="display: none;">
-    <div id="popupContent">
-        <h2>Toplantı Güncelle</h2>
-        <form id="updateForm">
-            <input type="hidden" id="updateId" />
-            <label for="updateTopic">Konu:</label>
-            <input type="text" id="updateTopic" required />
-            <br />
-            <label for="updateDate">Tarih:</label>
-            <input type="date" id="updateDate" required />
-            <br />
-            <label for="updateStartTime">Başlangıç Saati:</label>
-            <input type="time" id="updateStartTime" required />
-            <br />
-            <label for="updateEndTime">Bitiş Saati:</label>
-            <input type="time" id="updateEndTime" required />
-            <br />
-            <label for="updateParticipants">Katılımcılar:</label>
-            <input type="text" id="updateParticipants" required />
-            <br />
-            <button type="submit">Güncelle</button>
-            <button type="button" onclick="closePopup()">Kapat</button>
-        </form>
+            <!-- Güncelleme Popup -->
+            <div class="right-column" id="updatePopup" style="display: none;">
+                <div id="popupContent">
+                    <h2>Toplantı Güncelle</h2>
+                    <form id="updateForm">
+                        <input type="hidden" id="updateId" />
+
+                        <div class="mb-3">
+                            <label for="updateTopic" class="form-label">Konu:</label>
+                            <input type="text" id="updateTopic" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="updateDate" class="form-label">Tarih:</label>
+                            <input type="date" id="updateDate" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="updateStartTime" class="form-label">Başlangıç Saati:</label>
+                            <input type="time" id="updateStartTime" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="updateEndTime" class="form-label">Bitiş Saati:</label>
+                            <input type="time" id="updateEndTime" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="updateParticipants" class="form-label">Katılımcılar:</label>
+                            <input type="text" id="updateParticipants" class="form-control" required />
+                        </div>
+
+                        <button type="submit" class="btn btn-success">Güncelle</button>
+                        <button type="button" class="btn btn-secondary" onclick="closePopup()">Kapat</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        // Form submit edildiğinde AJAX ile veriyi gönderiyoruz
+        // Form submit edildiğinde AJAX ile veriyi gönder
         $("#meetingForm").submit(function (event) {
-            event.preventDefault();  // Formun varsayılan submit olayını durduruyoruz
+            event.preventDefault();  // Formun varsayılan submit olayını durdur
 
             var meeting = {
                 "Topic": $("#topic").val(),
@@ -90,7 +119,7 @@
         loadMeetings();
     });
 
-    // Veritabanındaki tüm toplantıları listeleme
+    // Veritabanındaki tüm toplantıları listele
     function loadMeetings() {
         $.ajax({
             type: "GET",
@@ -99,15 +128,29 @@
                 var meetingList = $("#meetingList");
                 meetingList.empty();  // Listeyi temizliyoruz
                 $.each(data, function (i, meeting) {
-                    // Her toplantı için liste öğesi oluşturuluyor ve sonuna "Sil" butonu ekleniyor
+
+                    // Tarihi ve saatleri formatlıyoruz
+                    var meetingDate = new Date(meeting.date);
+
+                    // toLocaleDateString ile Gün-Ay-Yıl formatı
+                    var formattedDate = meetingDate.toLocaleDateString('tr-TR');  // 'tr-TR' ile gün-ay-yıl formatı
+
+                    // Başlangıç ve bitiş saatlerini düzenliyoruz
+                    var formattedStartTime = meeting.startTime.substring(0, 5);  // HH:mm formatı
+                    var formattedEndTime = meeting.endTime.substring(0, 5);  // HH:mm formatı
+
+                    // Toplantı tarih ve saat bilgilerini birleştiriyoruz
+                    var displayTime = formattedStartTime + "-" + formattedEndTime + " / " + formattedDate;
+
+                    // Her toplantı için liste öğesi oluşturuyoruz ve sonuna "Sil" ve "Güncelle" butonu ekliyoruz
                     var listItem = `
-                                <li>
-                                    ${meeting.topic} (${meeting.date})
-                                    <button onclick="deleteMeeting(${meeting.id})">Sil</button>
-                                    <button onclick="openUpdatePopup(${meeting.id})">Güncelle</button>
-                                </li>
-                            `;
-                    meetingList.append(listItem);
+                            <li class="list-group-item mb-2">
+                                ${meeting.topic} (${displayTime})
+                                <button class="btn btn-danger btn-sm" onclick="deleteMeeting(${meeting.id})">Sil</button>
+                                <button class="btn btn-secondary btn-sm" onclick="openUpdatePopup(${meeting.id})">Güncelle</button>
+                            </li>
+                        `;
+                    meetingList.append(listItem);  // Listeye ekliyoruz
                 });
             },
             error: function (error) {
@@ -173,7 +216,7 @@
         $.ajax({
             type: "PUT",
             url: "/Meeting/Update",  // Güncelleme endpoint'i
-            data: updatedMeeting,  
+            data: updatedMeeting,
             dataType: "json",
             success: function () {
                 loadMeetings();  // Güncelleme başarılıysa listeyi güncelle
