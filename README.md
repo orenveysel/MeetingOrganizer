@@ -22,9 +22,9 @@ Bu proje şu teknolojiler kullanılarak geliştirilmiştir:
 
 ### Gereksinimler
 Bu projeyi çalıştırmak için aşağıdaki araçların sisteminize kurulmuş olması gerekir:
-- **.NET Core SDK 8.0** veya daha yeni bir sürüm
-- **MySQL** (veya başka bir veritabanı)
-- **Visual Studio 2022** veya daha yeni bir sürüm
+- **.NET Core SDK 8.0**
+- **MySQL**
+- **Visual Studio 2022**
 
 ### Adımlar
 1. **Projeyi Klonlayın**:
@@ -69,4 +69,5 @@ Bu projeyi çalıştırmak için aşağıdaki araçların sisteminize kurulmuş 
 
 - Yeni Toplantı Ekleme, Toplantı Güncelleme/Silme ve Toplantı Listesi Görünümü:
 
-![image](https://github.com/user-attachments/assets/ba022ca5-ce05-4573-9568-973639e7e0d4)
+![image](https://github.com/user-attachments/assets/1f0c9440-2544-4d97-876f-819d19e64ec2)
+
