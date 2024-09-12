@@ -42,6 +42,7 @@ namespace MeetingOrganizer.MVC.Controllers
             return Json(meetings); // JSON olarak geri döndürüyoruz
         }
 
+        // Id ile veri çekme
         [HttpGet]
         [Route("GetById/{id}")]
         public IActionResult GetById(int id)

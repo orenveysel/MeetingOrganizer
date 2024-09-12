@@ -54,7 +54,7 @@
             <button type="submit">Güncelle</button>
             <button type="button" onclick="closePopup()">Kapat</button>
         </form>
-    </div>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -72,14 +72,11 @@
                 "Participants": $("#participants").val()
             };
 
-            let deneme = JSON.stringify(meeting);  // JSON formatında veriyi serileştiriyoruz
-
             $.ajax({
                 type: "POST",
                 url: "/Meeting/Create",
-                data: meeting,  // Correctly passing the serialized object
+                data: meeting,
                 dataType: "json",
-                // contentType: "application/json",
                 success: function (response) {
                     loadMeetings();
                     $("#meetingForm")[0].reset();
@@ -88,17 +85,12 @@
                     console.log("Veri gönderiminde hata oluştu:", error);
                 }
             });
-
         });
-
-        // Veritabanındaki tüm toplantıları listeleme
-        
-
-        
         // Sayfa yüklendiğinde toplantıları listele
         loadMeetings();
     });
 
+    // Veritabanındaki tüm toplantıları listeleme
     function loadMeetings() {
         $.ajax({
             type: "GET",
@@ -109,12 +101,12 @@
                 $.each(data, function (i, meeting) {
                     // Her toplantı için liste öğesi oluşturuluyor ve sonuna "Sil" butonu ekleniyor
                     var listItem = `
-                            <li>
-                                ${meeting.topic} (${meeting.date})
-                                <button onclick="deleteMeeting(${meeting.id})">Sil</button>
-                                <button onclick="openUpdatePopup(${meeting.id})">Güncelle</button>
-                            </li>
-                        `;
+                                <li>
+                                    ${meeting.topic} (${meeting.date})
+                                    <button onclick="deleteMeeting(${meeting.id})">Sil</button>
+                                    <button onclick="openUpdatePopup(${meeting.id})">Güncelle</button>
+                                </li>
+                            `;
                     meetingList.append(listItem);
                 });
             },
@@ -181,7 +173,7 @@
         $.ajax({
             type: "PUT",
             url: "/Meeting/Update",  // Güncelleme endpoint'i
-            data: updatedMeeting,  // Correctly passing the serialized object
+            data: updatedMeeting,  
             dataType: "json",
             success: function () {
                 loadMeetings();  // Güncelleme başarılıysa listeyi güncelle
